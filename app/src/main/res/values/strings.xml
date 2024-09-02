@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">autopddand</string>
+    <string name="accessibility_service_description">Auto Pinduoduo Service</string>
+</resources>
