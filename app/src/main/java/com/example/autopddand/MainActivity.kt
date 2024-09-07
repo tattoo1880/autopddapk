@@ -13,6 +13,8 @@ import android.os.Looper
 import android.os.RemoteException
 import android.provider.Settings
 import android.text.TextUtils
+import android.view.accessibility.AccessibilityNodeInfo
+import java.io.File
 
 
 class MainActivity : Activity() {
@@ -26,30 +28,14 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         //todo使用adb 命令启动pinduoduo
-        val intent = Intent()
-        intent.setClassName("com.xunmeng.pinduoduo", "com.xunmeng.pinduoduo.ui.activity.MainFrameActivity")
-        startActivity(intent)
-        //todo等待10s
-        Thread.sleep(10000)
-        //todo使用adb 命令关闭pinduoduo
-//        closePinduoduoApp()
+//        val intent = Intent()
+//        intent.setClassName("com.xunmeng.pinduoduo", "com.xunmeng.pinduoduo.ui.activity.MainFrameActivity")
+//        startActivity(intent)
+
+        //todo 使用adb命令关闭pinduoduo
+
         restartPinduoduoApp()
 
-        //!跳转到无障碍服务
-//        openAccessibilitySettings()
-//        Thread.sleep(20000)
-//        //!检测是否开启了无障碍服务
-//        val whehter = isAccessibilitySettingsOn()
-//        if (whehter) {
-//            println("无障碍服务已开启")
-//        } else {
-//            println("无障碍服务未开启")
-//        }
-//
-//        Thread.sleep(100000)
-//        handler.postDelayed({
-//            launchPinduoduoApp()
-//        }, initialDelay)
     }
 
 //        handler.postDelayed({
@@ -115,19 +101,76 @@ class MainActivity : Activity() {
         // 关闭拼多多应用
 
 //        循环10次每次间隔5s
-        for (i in 1..10) {
+        for (i in 1..100) {
             val stopCommand = "am force-stop com.xunmeng.pinduoduo"
             executeAdbCommand(stopCommand)
 
             // 启动拼多多应用
             val startCommand = "monkey -p com.xunmeng.pinduoduo -c android.intent.category.LAUNCHER 1"
             executeAdbCommand(startCommand)
-            Thread.sleep(5000)
+            Thread.sleep(5*60*1000)
         }
 
     }
 
+    fun regsms(){
+        val startCommand = "monkey -p com.xunmeng.pinduoduo -c android.intent.category.LAUNCHER 1"
+        executeAdbCommand(startCommand)
 
+        Thread.sleep(10000)
+
+        val tapcm1 = "input tap 1265 2250"
+        executeAdbCommand(tapcm1)
+
+        Thread.sleep(3000)
+
+        //!todo 使用adb命令页面下翻到底
+        val swipeCommand = "input swipe 500 1500 500 500"
+        executeAdbCommand(swipeCommand)
+
+        Thread.sleep(3000)
+
+        //！todo 页面上翻到顶
+        val swipeCommand2 = "input swipe 500 500 500 1500"
+        executeAdbCommand(swipeCommand2)
+
+        Thread.sleep(3000)
+        val swipeCommand3 = "input swipe 500 500 500 1500"
+        executeAdbCommand(swipeCommand3)
+
+        Thread.sleep(3000)
+
+        //使用adb 点击“设置”按钮
+        val tapcomd2 = "input tap 1358 150"
+        executeAdbCommand(tapcomd2)
+
+        val swipeCommand4 = "input swipe 500 1500 500 500"
+
+        for (i in 1..10) {
+            executeAdbCommand(swipeCommand4)
+            Thread.sleep(1000)
+        }
+
+        val quit = "input tap 750 2080"
+        executeAdbCommand(quit)
+
+        val quitconfirm ="input tap 1050 1410"
+        executeAdbCommand(quitconfirm)
+
+        var login = "input tap 780 1500"
+        executeAdbCommand(login)
+
+        var login2 = "input tap 893 1888"
+        executeAdbCommand(login2)
+
+//+16592860240
+        Thread.sleep(13000)
+        val input = "input text 6592860240"
+        executeAdbCommand(input)
+
+        val confirmsendsms = "input tap 770 835"
+        executeAdbCommand(confirmsendsms)
+    }
     fun executeAdbCommand(command: String): String? {
         return try {
             // 使用 su -c 以 root 权限执行命令
